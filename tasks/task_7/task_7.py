@@ -3,7 +3,7 @@ from langchain_google_vertexai import VertexAI
 from langchain_core.prompts import PromptTemplate
 import os
 import sys
-sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath(''))
 
 class QuizGenerator:
     def __init__(self, topic=None, num_questions=1, vectorstore=None):
@@ -72,6 +72,9 @@ class QuizGenerator:
         """
         self.llm = VertexAI(
             ############# YOUR CODE HERE ############
+            model_name="gemini-pro",
+            temperature = 0.8, 
+            max_output_tokens = 500
         )
         
     def generate_question_with_vectorstore(self):
@@ -105,11 +108,17 @@ class QuizGenerator:
         ############# YOUR CODE HERE ############
         
         from langchain_core.runnables import RunnablePassthrough, RunnableParallel
+        if not self.llm:
+            self.init_llm()
+            st.write(self.llm)
+        if not self.vectorstore:
+            st.error("Vector store is not Initialised")
 
         ############# YOUR CODE HERE ############
         # Enable a Retriever using the as_retriever() method on the VectorStore object
         # HINT: Use the vectorstore as the retriever initialized on the class
         ############# YOUR CODE HERE ############
+        retriever = self.vectorstore.db.as_retriever()
         
         ############# YOUR CODE HERE ############
         # Use the system template to create a PromptTemplate
@@ -118,6 +127,8 @@ class QuizGenerator:
         
         # RunnableParallel allows Retriever to get relevant documents
         # RunnablePassthrough allows chain.invoke to send self.topic to LLM
+        promt = PromptTemplate.from_template(template=self.system_template)
+
         setup_and_retrieval = RunnableParallel(
             {"context": retriever, "topic": RunnablePassthrough()}
         )
@@ -126,7 +137,7 @@ class QuizGenerator:
         # Create a chain with the Retriever, PromptTemplate, and LLM
         # HINT: chain = RETRIEVER | PROMPT | LLM 
         ############# YOUR CODE HERE ############
-
+        chain = setup_and_retrieval | promt | self.llm
         # Invoke the chain with the topic as input
         response = chain.invoke(self.topic)
         return response
@@ -141,8 +152,8 @@ if __name__ == "__main__":
     
     embed_config = {
         "model_name": "textembedding-gecko@003",
-        "project": "YOUR-PROJECT-ID-HERE",
-        "location": "us-central1"
+        "project": "just-shell-418918",
+        "location": "us-east1"
     }
     
     screen = st.empty()

@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import sys
 import json
-sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath(''))
 from tasks.task_3.task_3 import DocumentProcessor
 from tasks.task_4.task_4 import EmbeddingClient
 from tasks.task_5.task_5 import ChromaCollectionCreator
@@ -15,7 +15,10 @@ class QuizManager:
         Task: Initialize the QuizManager class with a list of quiz questions.
 
         Overview:
-        This task involves setting up the `QuizManager` class by initializing it with a list of quiz question objects. Each quiz question object is a dictionary that includes the question text, multiple choice options, the correct answer, and an explanation. The initialization process should prepare the class for managing these quiz questions, including tracking the total number of questions.
+        This task involves setting up the `QuizManager` class by initializing it with a list of quiz question objects. 
+        Each quiz question object is a dictionary that includes the question text, multiple choice options, the correct answer,
+        and an explanation. The initialization process should prepare the class for managing these quiz questions, including 
+        tracking the total number of questions.
 
         Instructions:
         1. Store the provided list of quiz question objects in an instance variable named `questions`.
@@ -27,7 +30,8 @@ class QuizManager:
         Note: This initialization method is crucial for setting the foundation of the `QuizManager` class, enabling it to manage the quiz questions effectively. The class will rely on this setup to perform operations such as retrieving specific questions by index and navigating through the quiz.
         """
         ##### YOUR CODE HERE #####
-        pass # Placeholder
+        self.questions = questions
+        self.total_questions = len(questions)
     ##########################################################
 
     def get_question_at_index(self, index: int):
@@ -62,7 +66,9 @@ class QuizManager:
         Note: Ensure that `st.session_state["question_index"]` is initialized before calling this method. This navigation method enhances the user experience by providing fluid access to quiz questions.
         """
         ##### YOUR CODE HERE #####
-        pass  # Placeholder for implementation
+        current_index = st.session_state["question_index"]
+        new_index = (current_index + direction) % self.total_questions
+        st.session_state["question_index"] = new_index
     ##########################################################
 
 
@@ -71,8 +77,8 @@ if __name__ == "__main__":
     
     embed_config = {
         "model_name": "textembedding-gecko@003",
-        "project": "YOUR-PROJECT-ID-HERE",
-        "location": "us-central1"
+        "project": "just-shell-418918",
+        "location": "us-east1"
     }
     
     screen = st.empty()
@@ -112,11 +118,11 @@ if __name__ == "__main__":
             
             # Task 9
             ##########################################################
-            quiz_manager = # Use our new QuizManager class
+            quiz_manager = QuizManager(question_bank) # Use our new QuizManager class
             # Format the question and display
             with st.form("Multiple Choice Question"):
                 ##### YOUR CODE HERE #####
-                index_question = # Use the get_question_at_index method to set the 0th index
+                index_question = quiz_manager.get_question_at_index(0) # Use the get_question_at_index method to set the 0th index
                 ##### YOUR CODE HERE #####
                 
                 # Unpack choices for radio
@@ -126,10 +132,13 @@ if __name__ == "__main__":
                     # Set the key from the index question 
                     # Set the value from the index question
                     ##### YOUR CODE HERE #####
+                    key = choice['key']
+                    value = choice['value']
                     choices.append(f"{key}) {value}")
                 
                 ##### YOUR CODE HERE #####
                 # Display the question onto streamlit
+                st.write(index_question)
                 ##### YOUR CODE HERE #####
                 
                 answer = st.radio( # Display the radio button with the choices
