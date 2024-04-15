@@ -34,6 +34,5 @@ pip install -r requirements.txt
 # Run the application
 streamlit run app.py
 ```
-[![Custom Inference - YouTube](https://youtu.be/rYIes6g6AWM)
-
+[![Custom Inference - YouTube](https://i9.ytimg.com/vi_webp/rYIes6g6AWM/mq2.webp?sqp=CMja8rAG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGCwgZShLMA8=&rs=AOn4CLBvSgnx2RnIODG1JtN6DbpCPFmmog)](https://www.youtube.com/watch?v=rYIes6g6AWM&ab_channel=SaiTejaGilukara)
 
